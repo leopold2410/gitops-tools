@@ -1,0 +1,46 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+# GitHub recommends pinning actions to a commit SHA.
+# To get a newer version, you will need to update the SHA.
+# You can also reference a tag or branch, but the action may change without warning.
+
+name: Push changes
+
+on: [push]
+
+jobs:
+  push_changes:
+    name: Push changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Check Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: devops-test-tools/Dockerfile
+
+      - name: Build an image from Dockerfile
+        run: |
+          docker build -t docker.io/leopoldk/devops-test-tools:${{ github.sha }} devops-test-tools/
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'docker.io/leopoldk/devops-test-tools:${{ github.sha }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: ${{ vars.TRIVY_FAIL_SEVERITY }}
+          output: 'trivy-results.sarif'
+      
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
