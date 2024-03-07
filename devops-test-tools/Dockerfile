@@ -13,25 +13,25 @@ WORKDIR ${INSTALL_DIR}
 RUN apt-get update \
 && apt-get install --yes --no-install-recommends ca-certificates apt-transport-https yq jq curl wget gpg git \
 && rm -rf /var/lib/apt/lists/* \
-&& wget --progress=dot:giga -O get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
+&& wget --progress=dot:giga -O get_helm.sh "https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3" \
 && chmod 700 get_helm.sh \
 && ./get_helm.sh \
 && ARCHIVE="kubeconform-linux-amd64" \
-&& mkdir /opt/${ARCHIVE} \
-&& wget --progress=dot:giga -O $ARCHIVE.tar.gz "https://github.com/yannh/kubeconform/releases/download/v${KUBECONFORM_VERSION}/${ARCHIVE}.tar.gz" \
-&& wget --progress=dot:giga -O $ARCHIVE.sha256sum "https://github.com/yannh/kubeconform/releases/download/v${KUBECONFORM_VERSION}/CHECKSUMS" \
-&& sha256sum --check --ignore-missing ${ARCHIVE}.sha256sum \
-&& tar -xzf ${ARCHIVE}.tar.gz -C /opt/${ARCHIVE} \ 
-&& rm -f ${ARCHIVE}.tar.gz \
-&& ln -s /opt/${ARCHIVE}/kubeconform /usr/local/bin/kubeconform \
+&& mkdir "/opt/${ARCHIVE}" \
+&& wget --progress=dot:giga -O "$ARCHIVE.tar.gz" "https://github.com/yannh/kubeconform/releases/download/v${KUBECONFORM_VERSION}/${ARCHIVE}.tar.gz" \
+&& wget --progress=dot:giga -O "$ARCHIVE.sha256sum" "https://github.com/yannh/kubeconform/releases/download/v${KUBECONFORM_VERSION}/CHECKSUMS" \
+&& sha256sum --check --ignore-missing "${ARCHIVE}.sha256sum" \
+&& tar -xzf "${ARCHIVE}.tar.gz" -C "/opt/${ARCHIVE}" \ 
+&& rm -f "${ARCHIVE}.tar.gz" \
+&& ln -s "/opt/${ARCHIVE}/kubeconform" /usr/local/bin/kubeconform \
 && ARCHIVE="hadolint-Linux-x86_64" \
-&& mkdir /opt/${ARCHIVE} \
-&& wget --progress=dot:giga https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/${ARCHIVE} \
-&& wget --progress=dot:giga -O ${ARCHIVE}.sha256 https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/${ARCHIVE}.sha256 \
-&& sha256sum --check --ignore-missing ${ARCHIVE}.sha256 \
-&& mv ${ARCHIVE} /opt/${ARCHIVE}/hadolint \
-&& chmod a+x /opt/${ARCHIVE}/hadolint \
-&& ln -s /opt/${ARCHIVE}/hadolint /usr/local/bin/hadolint \
+&& mkdir "/opt/${ARCHIVE}" \
+&& wget --progress=dot:giga "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/${ARCHIVE}" \
+&& wget --progress=dot:giga -O "${ARCHIVE}.sha256" "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/${ARCHIVE}.sha256" \
+&& sha256sum --check --ignore-missing "${ARCHIVE}.sha256" \
+&& mv "${ARCHIVE}" "/opt/${ARCHIVE}/hadolint" \
+&& chmod a+x "/opt/${ARCHIVE}/hadolint" \
+&& ln -s "/opt/${ARCHIVE}/hadolint" /usr/local/bin/hadolint \
 && kubeconform -v \
 && helm version \
 && hadolint -v
