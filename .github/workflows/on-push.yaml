@@ -46,3 +46,14 @@ jobs:
         with:
           sarif_file: 'trivy-results.sarif'
           category: 'Trivy Scan'
+
+      - name: Run Trivy SBOM scanner
+        uses: aquasecurity/trivy-action@0.18.0
+        with:
+          image-ref: 'docker.io/leopoldk/devops-test-tools:${{ github.sha }}'
+          scan-type: image
+          format: 'github'
+          output: 'dependency-results.sbom.json'
+          severity: ${{ vars.TRIVY_FAIL_SEVERITY }}
+          scanners: 'vuln'
+          github-pat: ${{ secrets.GITHUB_TOKEN }}
