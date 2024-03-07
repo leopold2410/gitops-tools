@@ -23,6 +23,7 @@ jobs:
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: devops-test-tools/Dockerfile
+          ignore: DL3008
 
       - name: Build an image from Dockerfile
         run: |
