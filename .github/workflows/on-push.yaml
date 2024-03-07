@@ -30,10 +30,10 @@ jobs:
           docker build -t docker.io/leopoldk/devops-test-tools:${{ github.sha }} devops-test-tools/
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.17.0
+        uses: aquasecurity/trivy-action@0.18.0
         with:
           image-ref: 'docker.io/leopoldk/devops-test-tools:${{ github.sha }}'
-          format: 'table'
+          format: 'sarif'
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
