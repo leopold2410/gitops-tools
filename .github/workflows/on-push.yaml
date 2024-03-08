@@ -25,6 +25,12 @@ jobs:
           dockerfile: devops-test-tools/Dockerfile
           ignore: DL3008
 
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: docker.io/leopoldk/devops-test-tools
+
       - name: Build an image from Dockerfile
         run: |
           docker build -t docker.io/leopoldk/devops-test-tools:${{ github.sha }} devops-test-tools/
