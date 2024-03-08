@@ -69,7 +69,7 @@ jobs:
       - name: Run Trivy SBOM scanner
         uses: aquasecurity/trivy-action@0.18.0
         with:
-          image-ref: 'docker.io/leopoldk/devops-test-tools:${{ github.sha }}'
+          image-ref: 'docker.io/leopoldk/devops-test-tools:main'
           scan-type: image
           format: 'github'
           output: 'dependency-results.sbom.json'
