@@ -56,7 +56,6 @@ jobs:
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: ${{ vars.TRIVY_FAIL_SEVERITY }}
       
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.18.0
