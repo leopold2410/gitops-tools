@@ -30,6 +30,14 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: docker.io/leopoldk/devops-test-tools
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha   
 
       - name: Build an image from Dockerfile
         run: |
@@ -38,7 +46,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.18.0
         with:
-          image-ref: 'docker.io/leopoldk/devops-test-tools:${{ github.sha }}'
+          image-ref: 'docker.io/leopoldk/devops-test-tools:main'
           format: 'sarif'
           exit-code: '1'
           ignore-unfixed: true
