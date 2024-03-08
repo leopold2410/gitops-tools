@@ -48,6 +48,16 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+      - name: Run Trivy vulnerability scanner (Table)
+        uses: aquasecurity/trivy-action@0.18.0
+        with:
+          image-ref: 'docker.io/leopoldk/devops-test-tools:main'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: ${{ vars.TRIVY_FAIL_SEVERITY }}
+      
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.18.0
         with:
