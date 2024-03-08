@@ -38,16 +38,20 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
-            type=raw,value={{ github.sha }}   
 
-      - name: Build an image from Dockerfile
-        run: |
-          docker build -t docker.io/leopoldk/devops-test-tools:${{ github.sha }} devops-test-tools/
+      - name: Build and push Docker image
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: .
+          file: ./devops-test-tools/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.18.0
         with:
-          image-ref: 'docker.io/leopoldk/devops-test-tools:main'
+          image-ref: 'docker.io/leopoldk/devops-test-tools:$("${{ github.sha }}".SubString(0, 8))'
           format: 'sarif'
           exit-code: '1'
           ignore-unfixed: true
